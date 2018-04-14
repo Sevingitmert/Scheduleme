@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "161492291435",
+    "firebase_url": "https://scheduleme-cca66.firebaseio.com",
+    "project_id": "scheduleme-cca66",
+    "storage_bucket": "scheduleme-cca66.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:161492291435:android:95e455cbe9ee9da2",
+        "android_client_info": {
+          "package_name": "com.example.merts.scheduleme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "161492291435-1nn1ovkbnj40eaf2m4i7hpn0019s9mpl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.merts.scheduleme",
+            "certificate_hash": "2bf45f16e0e989582b1b21fa862c298aeb03f8dc"
+          }
+        },
+        {
+          "client_id": "161492291435-i5nlaffbcturbj9kd3eh5002ar0j0g87.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYghGlUDBXMGLq2BvtCGRyll_atTqx7HI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "161492291435-i5nlaffbcturbj9kd3eh5002ar0j0g87.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
