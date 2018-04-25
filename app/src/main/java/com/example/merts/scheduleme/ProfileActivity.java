@@ -52,8 +52,8 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         }
 
 
-        // mAuth = FirebaseAuth.getInstance();
-        // mUser = mAuth.getCurrentUser();
+         mAuth = FirebaseAuth.getInstance();
+         mUser = mAuth.getCurrentUser();
         // profiletview = (TextView) findViewById(R.id.textView);
         //profiletview.setText(mUser.getEmail());
     }
@@ -82,6 +82,10 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                 break;
             case R.id.nav_signout:
 
+                mAuth.signOut();
+                finish();
+                Intent i = new Intent(this, MainActivity.class);
+                startActivity(i);
                 break;
         }
         drawer.closeDrawer(GravityCompat.START);
