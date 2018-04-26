@@ -11,10 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -32,8 +35,13 @@ public class TakenoteFragment extends Fragment implements View.OnClickListener {
 
     private EditText Edittexttitle;
     private EditText Edittextdescription;
+    private TextView textViewData;
 
     private FirebaseFirestore db= FirebaseFirestore.getInstance();
+    private DocumentReference noteRef=db.document("Notebook/My First Note");
+
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -41,13 +49,23 @@ public class TakenoteFragment extends Fragment implements View.OnClickListener {
 
         Edittexttitle= view.findViewById(R.id.edit_text_title);
         Edittextdescription=view.findViewById(R.id.edit_text_description);
+        textViewData=view.findViewById(R.id.text_view_data);
 
-        Button b= view.findViewById(R.id.savenote);
-        b.setOnClickListener(this);
+        Button bsave= view.findViewById(R.id.savenote);
+        bsave.setOnClickListener(this);
+        Button bload= view.findViewById(R.id.loadnote);
+        bload.setOnClickListener(this);
         return view;
+
+
 
     }
     public void saveNote(View v){
+
+
+    }
+    public void loadNote(View v){
+
 
 
     }
@@ -55,29 +73,62 @@ public class TakenoteFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        String title=Edittexttitle.getText().toString();
-        String description=Edittextdescription.getText().toString();
+        switch (v.getId()) {
+            case R.id.savenote:
+        String title = Edittexttitle.getText().toString();
+        String description = Edittextdescription.getText().toString();
 
-        Map<String,Object> note=new HashMap<>();
-        note.put(KEY_TITLE,title);
-        note.put(KEY_DESCRIPTION,description);
+        Map<String, Object> note = new HashMap<>();
+        note.put(KEY_TITLE, title);
+        note.put(KEY_DESCRIPTION, description);
 
-        db.collection("Notebook").document("My First Note").set(note)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid){
+            noteRef.set(note)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
 
-                        Toast.makeText(getActivity(), "Note saved", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Note saved", Toast.LENGTH_SHORT).show();
 
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getActivity(), "Error!", Toast.LENGTH_SHORT).show();
-                        Log.d(TAG,e.toString());
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getActivity(), "Error!", Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, e.toString());
 
-                    }
-                });
+                        }
+                    });
+            break;
+            case R.id.loadnote:
+            noteRef.get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if (documentSnapshot.exists()) {
+                                String title = documentSnapshot.getString(KEY_TITLE);
+                                String description = documentSnapshot.getString(KEY_DESCRIPTION);
+                                //Map<String,Object> note=documentSnapshot.getData();
+
+                                textViewData.setText("Title: " + title + "\n" + "Description: " + description);
+                                Toast.makeText(getActivity(), "Note loaded", Toast.LENGTH_SHORT).show();
+
+
+                            } else {
+                                Toast.makeText(getActivity(), "Document does not exist", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getActivity(), "Error!", Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, e.toString());
+                        }
+                    });
+            break;
+
+        }
     }
 }
