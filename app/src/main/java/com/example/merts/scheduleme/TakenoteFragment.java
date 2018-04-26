@@ -18,7 +18,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,6 +47,7 @@ public class TakenoteFragment extends Fragment implements View.OnClickListener {
 
 
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -55,22 +61,50 @@ public class TakenoteFragment extends Fragment implements View.OnClickListener {
         bsave.setOnClickListener(this);
         Button bload= view.findViewById(R.id.loadnote);
         bload.setOnClickListener(this);
+        Button bupdatedescription=view.findViewById(R.id.updatedescription);
+        bupdatedescription.setOnClickListener(this);
+        Button bdeletedescription=view.findViewById(R.id.deletedescription);
+        bdeletedescription.setOnClickListener(this);
+        Button bdeletenote=view.findViewById(R.id.deletenote);
+        bdeletenote.setOnClickListener(this);
         return view;
 
 
 
     }
-    public void saveNote(View v){
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        noteRef.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+                if(e !=null){
+                    Toast.makeText(getActivity(), "Error while loading!", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG,e.toString());
+                    return;
+                }
+
+                if (documentSnapshot.exists()) {
+                    String title = documentSnapshot.getString(KEY_TITLE);
+                    String description = documentSnapshot.getString(KEY_DESCRIPTION);
+
+                    textViewData.setText("Title: " + title + "\n" + "Description: " + description);
+                    //Toast.makeText(getActivity(), "Note loaded", Toast.LENGTH_SHORT).show();
 
 
+                }else{
+                    textViewData.setText("");
+                }
+
+            }
+        });
     }
-    public void loadNote(View v){
-
-
-
-    }
-
-
+    /*public void saveNote(View v){}
+    public void updateDescription(View v){}
+    public void deleteDescription(View v){}
+    public void deleteNote(View v){}
+    public void loadNote(View v){}*/
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -128,7 +162,20 @@ public class TakenoteFragment extends Fragment implements View.OnClickListener {
                         }
                     });
             break;
+            case R.id.updatedescription:
+                String descriptionupdate= Edittextdescription.getText().toString();
 
+                //Map<String,Object> note=new HashMap<>();
+                //note.put(KEY_DESCRIPTION,description);
+                //noteRef.set(note, SetOptions.merge());
+                noteRef.update(KEY_DESCRIPTION ,descriptionupdate);
+            break;
+            case R.id.deletedescription:
+                noteRef.update(KEY_DESCRIPTION, FieldValue.delete());
+            break;
+            case R.id.deletenote:
+                noteRef.delete();
+            break;
         }
     }
 }

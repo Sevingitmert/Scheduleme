@@ -35,6 +35,26 @@
         android:text="Load"
         android:onClick="loadNote"/>
     
+    <Button
+        android:id="@+id/updatedescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Update Description"
+        android:onClick="updateDescription"/>
+
+    <Button
+        android:id="@+id/deletedescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Delete Description"
+        android:onClick="deleteDescription"/>
+    <Button
+        android:id="@+id/deletenote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Delete Note"
+        android:onClick="deleteNote"/>
+
     <TextView
         android:id="@+id/text_view_data"
         android:layout_width="wrap_content"
