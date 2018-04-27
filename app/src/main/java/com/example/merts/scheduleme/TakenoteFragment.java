@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -23,6 +27,9 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
@@ -34,16 +41,22 @@ import java.util.Map;
 
 public class TakenoteFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = "TakenoteFragment";
+    String docid;
 
     private static final String KEY_TITLE="Title";
     private static final String KEY_DESCRIPTION="Description";
-
+    private String emailString;
+    FirebaseAuth mAuth;
     private EditText Edittexttitle;
     private EditText Edittextdescription;
+
     private TextView textViewData;
 
     private FirebaseFirestore db= FirebaseFirestore.getInstance();
+    private CollectionReference notebookRef= db.collection("Notebook");
     private DocumentReference noteRef=db.document("Notebook/My First Note");
+
+
 
 
 
@@ -52,10 +65,12 @@ public class TakenoteFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.fragment_takenote, container, false);
-
+        mAuth = FirebaseAuth.getInstance();
+        emailString = mAuth.getCurrentUser().getEmail();
         Edittexttitle= view.findViewById(R.id.edit_text_title);
         Edittextdescription=view.findViewById(R.id.edit_text_description);
         textViewData=view.findViewById(R.id.text_view_data);
+        docid=null;
 
         Button bsave= view.findViewById(R.id.savenote);
         bsave.setOnClickListener(this);
@@ -63,10 +78,11 @@ public class TakenoteFragment extends Fragment implements View.OnClickListener {
         bload.setOnClickListener(this);
         Button bupdatedescription=view.findViewById(R.id.updatedescription);
         bupdatedescription.setOnClickListener(this);
-        Button bdeletedescription=view.findViewById(R.id.deletedescription);
-        bdeletedescription.setOnClickListener(this);
+
         Button bdeletenote=view.findViewById(R.id.deletenote);
         bdeletenote.setOnClickListener(this);
+
+
         return view;
 
 
@@ -76,33 +92,35 @@ public class TakenoteFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
-        noteRef.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
+        notebookRef.whereEqualTo("email",emailString)
+
+                .addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
             @Override
-            public void onEvent(DocumentSnapshot documentSnapshot, FirebaseFirestoreException e) {
+            public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
                 if(e !=null){
-                    Toast.makeText(getActivity(), "Error while loading!", Toast.LENGTH_SHORT).show();
-                    Log.d(TAG,e.toString());
                     return;
                 }
+                String data="";
+                for(QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots){
+                    Note note=documentSnapshot.toObject(Note.class);
+                    note.setDocumentId(documentSnapshot.getId());
+                    String documentId=note.getDocumentId();
+                    emailString=mAuth.getCurrentUser().getEmail();
+                    String title=note.getTitle();
+                    String description=note.getDescription();
+                    data+= "\nTitle: "+ title +"\nDescription: "+description
+                            +" \n\n";
+                    //notebookRef.document(documentId)
 
-                if (documentSnapshot.exists()) {
-                    String title = documentSnapshot.getString(KEY_TITLE);
-                    String description = documentSnapshot.getString(KEY_DESCRIPTION);
-
-                    textViewData.setText("Title: " + title + "\n" + "Description: " + description);
-                    //Toast.makeText(getActivity(), "Note loaded", Toast.LENGTH_SHORT).show();
-
-
-                }else{
-                    textViewData.setText("");
                 }
+                textViewData.setText(data);
 
             }
         });
     }
     /*public void saveNote(View v){}
     public void updateDescription(View v){}
-    public void deleteDescription(View v){}
+
     public void deleteNote(View v){}
     public void loadNote(View v){}*/
     @Override
@@ -110,71 +128,110 @@ public class TakenoteFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.savenote:
         String title = Edittexttitle.getText().toString();
-        String description = Edittextdescription.getText().toString();
+        final String description = Edittextdescription.getText().toString();
 
-        Map<String, Object> note = new HashMap<>();
-        note.put(KEY_TITLE, title);
-        note.put(KEY_DESCRIPTION, description);
 
-            noteRef.set(note)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
+        emailString=mAuth.getCurrentUser().getEmail();
+        System.out.println(emailString);
+        Note note=new Note(emailString,title,description);
+        docid=note.getDocumentId();
+        notebookRef.add(note);
 
-                            Toast.makeText(getActivity(), "Note saved", Toast.LENGTH_SHORT).show();
 
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getActivity(), "Error!", Toast.LENGTH_SHORT).show();
-                            Log.d(TAG, e.toString());
 
-                        }
-                    });
             break;
             case R.id.loadnote:
-            noteRef.get()
-                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                        @Override
-                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            if (documentSnapshot.exists()) {
-                                String title = documentSnapshot.getString(KEY_TITLE);
-                                String description = documentSnapshot.getString(KEY_DESCRIPTION);
-                                //Map<String,Object> note=documentSnapshot.getData();
-
-                                textViewData.setText("Title: " + title + "\n" + "Description: " + description);
-                                Toast.makeText(getActivity(), "Note loaded", Toast.LENGTH_SHORT).show();
+                notebookRef.whereEqualTo("email",emailString)
 
 
-                            } else {
-                                Toast.makeText(getActivity(), "Document does not exist", Toast.LENGTH_SHORT).show();
+                        .get()
+                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                String data="";
+                                for(QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
+                                    Note note=documentSnapshot.toObject(Note.class);
+                                    note.setDocumentId(documentSnapshot.getId());
+
+                                    String documentId=note.getDocumentId();
+                                    emailString=mAuth.getCurrentUser().getEmail();
+                                    String title=note.getTitle();
+                                    String description=note.getDescription();
+                                    data+= "\nTitle: "+ title +"\nDescription: "+description
+                                            +" \n\n";
+
+
+
+                                }
+                                textViewData.setText(data);
+
+
                             }
+                        });
 
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getActivity(), "Error!", Toast.LENGTH_SHORT).show();
-                            Log.d(TAG, e.toString());
-                        }
-                    });
             break;
             case R.id.updatedescription:
-                String descriptionupdate= Edittextdescription.getText().toString();
+                String updatetitle=Edittexttitle.getText().toString();
+                final String updatedesc=Edittextdescription.getText().toString();
 
-                //Map<String,Object> note=new HashMap<>();
-                //note.put(KEY_DESCRIPTION,description);
-                //noteRef.set(note, SetOptions.merge());
-                noteRef.update(KEY_DESCRIPTION ,descriptionupdate);
-            break;
-            case R.id.deletedescription:
-                noteRef.update(KEY_DESCRIPTION, FieldValue.delete());
-            break;
+                notebookRef.whereEqualTo("email",emailString).whereEqualTo("title",updatetitle)
+
+
+                        .addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+                            @Override
+                            public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
+                                if(e !=null){
+                                    return;
+                                }
+
+                                for(QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots){
+                                    Note note=documentSnapshot.toObject(Note.class);
+                                    note.setDocumentId(documentSnapshot.getId());
+                                    String documentId=note.getDocumentId();
+                                    //emailString=mAuth.getCurrentUser().getEmail();
+                                    String title=note.getTitle();
+
+
+                                    notebookRef.document(documentId).update("description",updatedesc);
+
+                                }
+
+
+                            }
+                        });
+
+
+
+
+                        break;
             case R.id.deletenote:
-                noteRef.delete();
+                String xtitle = Edittexttitle.getText().toString();
+
+                notebookRef.whereEqualTo("email",emailString).whereEqualTo("title",xtitle)
+
+                        .addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+                            @Override
+                            public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
+                                if(e !=null){
+                                    return;
+                                }
+
+                                for(QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots){
+                                    Note note=documentSnapshot.toObject(Note.class);
+                                    note.setDocumentId(documentSnapshot.getId());
+                                    String documentId=note.getDocumentId();
+                                   // emailString=mAuth.getCurrentUser().getEmail();
+                                    String title=note.getTitle();
+
+
+                                    notebookRef.document(documentId).delete();
+
+                                }
+
+
+                            }
+                        });
+
             break;
         }
     }
