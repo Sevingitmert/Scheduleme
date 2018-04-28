@@ -4,8 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorAccent"
     tools:context="com.example.merts.scheduleme.MainActivity">
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:src="@drawable/scheduleme_icon" />
 
     <Button
         android:id="@+id/button_login"
@@ -15,9 +24,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="165dp"
         android:background="@color/colorPrimary"
-        android:textColor="#ffffff"
+        android:onClick="openLogin"
         android:text="LOGIN"
-        android:onClick="openLogin"/>
+        android:textColor="#ffffff" />
 
     <Button
         android:id="@+id/button_signup"
@@ -27,7 +36,7 @@
         android:layout_alignTop="@+id/button_login"
         android:layout_marginTop="55dp"
         android:background="@color/colorPrimary"
-        android:textColor="#ffffff"
+        android:onClick="openRegister"
         android:text="SIGN UP"
-        android:onClick="openRegister"/>
+        android:textColor="#ffffff" />
 </RelativeLayout>

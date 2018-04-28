@@ -47,7 +47,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
 
 
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new AddalarmFragment()).commit();
+                    new ProfilFragment()).commit();
             navigationView.setCheckedItem(R.id.nav_addalarm);
         }
 
@@ -79,6 +79,8 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                 break;
 
             case R.id.nav_localactivity:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new AddactivityFragment()).commit();
                 break;
             case R.id.nav_signout:
 
@@ -108,4 +110,6 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
     }
+
+    
 }

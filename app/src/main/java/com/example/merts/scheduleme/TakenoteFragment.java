@@ -40,11 +40,11 @@ import java.util.Map;
  */
 
 public class TakenoteFragment extends Fragment implements View.OnClickListener {
-    private static final String TAG = "TakenoteFragment";
+   // private static final String TAG = "TakenoteFragment";
     String docid;
 
-    private static final String KEY_TITLE="Title";
-    private static final String KEY_DESCRIPTION="Description";
+   // private static final String KEY_TITLE = "Title";
+  //  private static final String KEY_DESCRIPTION = "Description";
     private String emailString;
     FirebaseAuth mAuth;
     private EditText Edittexttitle;
@@ -52,39 +52,34 @@ public class TakenoteFragment extends Fragment implements View.OnClickListener {
 
     private TextView textViewData;
 
-    private FirebaseFirestore db= FirebaseFirestore.getInstance();
-    private CollectionReference notebookRef= db.collection("Notebook");
-    private DocumentReference noteRef=db.document("Notebook/My First Note");
-
-
-
-
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference notebookRef = db.collection("Notebook");
+    //private DocumentReference noteRef = db.document("Notebook/My First Note");
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view =inflater.inflate(R.layout.fragment_takenote, container, false);
+        View view = inflater.inflate(R.layout.fragment_takenote, container, false);
         mAuth = FirebaseAuth.getInstance();
         emailString = mAuth.getCurrentUser().getEmail();
-        Edittexttitle= view.findViewById(R.id.edit_text_title);
-        Edittextdescription=view.findViewById(R.id.edit_text_description);
-        textViewData=view.findViewById(R.id.text_view_data);
-        docid=null;
+        Edittexttitle = view.findViewById(R.id.edit_text_title);
+        Edittextdescription = view.findViewById(R.id.edit_text_description);
+        textViewData = view.findViewById(R.id.text_view_data);
+        docid = null;
 
-        Button bsave= view.findViewById(R.id.savenote);
+        Button bsave = view.findViewById(R.id.savenote);
         bsave.setOnClickListener(this);
-        Button bload= view.findViewById(R.id.loadnote);
+        Button bload = view.findViewById(R.id.loadnote);
         bload.setOnClickListener(this);
-        Button bupdatedescription=view.findViewById(R.id.updatedescription);
+        Button bupdatedescription = view.findViewById(R.id.updatedescription);
         bupdatedescription.setOnClickListener(this);
 
-        Button bdeletenote=view.findViewById(R.id.deletenote);
+        Button bdeletenote = view.findViewById(R.id.deletenote);
         bdeletenote.setOnClickListener(this);
 
 
         return view;
-
 
 
     }
@@ -92,74 +87,69 @@ public class TakenoteFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
-        notebookRef.whereEqualTo("email",emailString)
+        notebookRef.whereEqualTo("email", emailString)
 
                 .addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
-                if(e !=null){
-                    return;
-                }
-                String data="";
-                for(QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots){
-                    Note note=documentSnapshot.toObject(Note.class);
-                    note.setDocumentId(documentSnapshot.getId());
-                    String documentId=note.getDocumentId();
-                    emailString=mAuth.getCurrentUser().getEmail();
-                    String title=note.getTitle();
-                    String description=note.getDescription();
-                    data+= "\nTitle: "+ title +"\nDescription: "+description
-                            +" \n\n";
-                    //notebookRef.document(documentId)
+                    @Override
+                    public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
+                        if (e != null) {
+                            return;
+                        }
+                        String data = "";
+                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            Note note = documentSnapshot.toObject(Note.class);
+                            note.setDocumentId(documentSnapshot.getId());
+                          //  String documentId = note.getDocumentId();
+                            emailString = mAuth.getCurrentUser().getEmail();
+                            String title = note.getTitle();
+                            String description = note.getDescription();
+                            data += "\nTitle: " + title + "\nDescription: " + description
+                                    + " \n\n";
+                            //notebookRef.document(documentId)
 
-                }
-                textViewData.setText(data);
+                        }
+                        textViewData.setText(data);
 
-            }
-        });
+                    }
+                });
     }
-    /*public void saveNote(View v){}
-    public void updateDescription(View v){}
 
-    public void deleteNote(View v){}
-    public void loadNote(View v){}*/
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.savenote:
-        String title = Edittexttitle.getText().toString();
-        final String description = Edittextdescription.getText().toString();
+                String title = Edittexttitle.getText().toString();
+                final String description = Edittextdescription.getText().toString();
 
 
-        emailString=mAuth.getCurrentUser().getEmail();
-        System.out.println(emailString);
-        Note note=new Note(emailString,title,description);
-        docid=note.getDocumentId();
-        notebookRef.add(note);
+                emailString = mAuth.getCurrentUser().getEmail();
+                System.out.println(emailString);
+                Note note = new Note(emailString, title, description);
+                docid = note.getDocumentId();
+                notebookRef.add(note);
 
 
-
-            break;
+                break;
             case R.id.loadnote:
-                notebookRef.whereEqualTo("email",emailString)
+                notebookRef.whereEqualTo("email", emailString)
 
 
                         .get()
                         .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                             @Override
                             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                String data="";
-                                for(QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
-                                    Note note=documentSnapshot.toObject(Note.class);
+                                String data = "";
+                                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                    Note note = documentSnapshot.toObject(Note.class);
                                     note.setDocumentId(documentSnapshot.getId());
 
-                                    String documentId=note.getDocumentId();
-                                    emailString=mAuth.getCurrentUser().getEmail();
-                                    String title=note.getTitle();
-                                    String description=note.getDescription();
-                                    data+= "\nTitle: "+ title +"\nDescription: "+description
-                                            +" \n\n";
-
+                                   // String documentId = note.getDocumentId();
+                                    emailString = mAuth.getCurrentUser().getEmail();
+                                    String title = note.getTitle();
+                                    String description = note.getDescription();
+                                    data += "\nTitle: " + title + "\nDescription: " + description
+                                            + " \n\n";
 
 
                                 }
@@ -169,30 +159,30 @@ public class TakenoteFragment extends Fragment implements View.OnClickListener {
                             }
                         });
 
-            break;
+                break;
             case R.id.updatedescription:
-                String updatetitle=Edittexttitle.getText().toString();
-                final String updatedesc=Edittextdescription.getText().toString();
+                String updatetitle = Edittexttitle.getText().toString();
+                final String updatedesc = Edittextdescription.getText().toString();
 
-                notebookRef.whereEqualTo("email",emailString).whereEqualTo("title",updatetitle)
+                notebookRef.whereEqualTo("email", emailString).whereEqualTo("title", updatetitle)
 
 
                         .addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
                             @Override
                             public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
-                                if(e !=null){
+                                if (e != null) {
                                     return;
                                 }
 
-                                for(QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots){
-                                    Note note=documentSnapshot.toObject(Note.class);
+                                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                    Note note = documentSnapshot.toObject(Note.class);
                                     note.setDocumentId(documentSnapshot.getId());
-                                    String documentId=note.getDocumentId();
+                                    String documentId = note.getDocumentId();
                                     //emailString=mAuth.getCurrentUser().getEmail();
-                                    String title=note.getTitle();
+                                   // String title = note.getTitle();
 
 
-                                    notebookRef.document(documentId).update("description",updatedesc);
+                                    notebookRef.document(documentId).update("description", updatedesc);
 
                                 }
 
@@ -201,27 +191,25 @@ public class TakenoteFragment extends Fragment implements View.OnClickListener {
                         });
 
 
-
-
-                        break;
+                break;
             case R.id.deletenote:
                 String xtitle = Edittexttitle.getText().toString();
 
-                notebookRef.whereEqualTo("email",emailString).whereEqualTo("title",xtitle)
+                notebookRef.whereEqualTo("email", emailString).whereEqualTo("title", xtitle)
 
                         .addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
                             @Override
                             public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
-                                if(e !=null){
+                                if (e != null) {
                                     return;
                                 }
 
-                                for(QueryDocumentSnapshot documentSnapshot:queryDocumentSnapshots){
-                                    Note note=documentSnapshot.toObject(Note.class);
+                                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                    Note note = documentSnapshot.toObject(Note.class);
                                     note.setDocumentId(documentSnapshot.getId());
-                                    String documentId=note.getDocumentId();
-                                   // emailString=mAuth.getCurrentUser().getEmail();
-                                    String title=note.getTitle();
+                                    String documentId = note.getDocumentId();
+                                    // emailString=mAuth.getCurrentUser().getEmail();
+                                    //String title = note.getTitle();
 
 
                                     notebookRef.document(documentId).delete();
@@ -232,7 +220,7 @@ public class TakenoteFragment extends Fragment implements View.OnClickListener {
                             }
                         });
 
-            break;
+                break;
         }
     }
 }
