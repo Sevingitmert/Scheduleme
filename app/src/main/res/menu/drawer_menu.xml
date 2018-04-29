@@ -12,26 +12,26 @@
         <item
             android:id="@+id/nav_addalarm"
             android:icon="@drawable/ic_addalarm"
-            android:title="Addalarm" />
+            android:title="Add alarm" />
         <item
             android:id="@+id/nav_addlocation"
             android:icon="@drawable/ic_addlocation"
-            android:title="AddLocation" />
+            android:title="Add Location" />
 
         <item
             android:id="@+id/nav_takenote"
             android:icon="@drawable/ic_takenote"
-            android:title="Takenote" />
+            android:title="Take note" />
 
         <item
             android:id="@+id/nav_localactivity"
             android:icon="@drawable/ic_localactivity"
-            android:title="Localactiitiy" />
+            android:title="Local activity" />
 
         <item
             android:id="@+id/nav_signout"
             android:icon="@drawable/ic_signout"
-            android:title="Signout" />
+            android:title="Sign out" />
     
 
 

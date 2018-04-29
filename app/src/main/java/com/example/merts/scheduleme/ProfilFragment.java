@@ -1,5 +1,6 @@
 package com.example.merts.scheduleme;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -81,13 +82,21 @@ public class ProfilFragment extends Fragment implements View.OnClickListener {
                 replaceFragment(fragment);
                 break;
             case R.id.button_activity:
-                fragment = new AddactivityFragment();
-                replaceFragment(fragment);
+
+                //fragment = new AddactivityFragment();
+                //replaceFragment(fragment);
+                Intent intent=new Intent(getActivity(),LocalActivity.class);
+                startActivity(intent);
                 break;
 
 
         }
     }
+    public void loadProfile(View view){
+        Intent intent=new Intent(getActivity(),LocalActivity.class);
+        startActivity(intent);
+    }
+
 
     public void replaceFragment(Fragment someFragment) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();

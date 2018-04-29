@@ -3,11 +3,14 @@ package com.example.merts.scheduleme;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -20,10 +23,10 @@ import com.google.firebase.auth.FirebaseUser;
 public class ProfileActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawer;
-
     FirebaseAuth mAuth;
     FirebaseUser mUser;
-    TextView profiletview;
+    //TextView profiletview;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,12 +51,12 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
 
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new ProfilFragment()).commit();
-            navigationView.setCheckedItem(R.id.nav_addalarm);
+            navigationView.setCheckedItem(R.id.nav_profile);
         }
 
 
-         mAuth = FirebaseAuth.getInstance();
-         mUser = mAuth.getCurrentUser();
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
         // profiletview = (TextView) findViewById(R.id.textView);
         //profiletview.setText(mUser.getEmail());
     }
@@ -79,8 +82,11 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                 break;
 
             case R.id.nav_localactivity:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new AddactivityFragment()).commit();
+                // getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                //       new AddactivityFragment()).commit();
+
+                Intent i2 = new Intent(this, LocalActivity.class);
+                startActivity(i2);
                 break;
             case R.id.nav_signout:
 
@@ -102,7 +108,9 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         } else {
             super.onBackPressed();
         }
+
     }
+
 
     public void signOut(View v) {
         mAuth.signOut();
@@ -111,5 +119,5 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         startActivity(i);
     }
 
-    
+
 }

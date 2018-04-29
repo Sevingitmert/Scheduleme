@@ -33,7 +33,7 @@
         android:layout_marginStart="63dp"
         android:layout_toEndOf="@+id/button_addalarm"
         android:background="@color/colorPrimaryDark"
-        android:text="Locaiton" />
+        android:text="Location" />
 
     <Button
         android:id="@+id/button_takenote"
@@ -45,7 +45,7 @@
         android:background="@color/colorPrimaryDark"
         android:text="Take Note" />
 
-    <EditText
+    <TextView
         android:id="@+id/editText3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -56,7 +56,7 @@
         android:inputType="textPersonName"
         android:text="Set Reminder Via" />
 
-    <EditText
+    <TextView
         android:id="@+id/editText4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -75,5 +75,6 @@
         android:layout_below="@+id/editText4"
         android:layout_marginTop="18dp"
         android:background="@color/colorPrimaryDark"
-        android:text="Go" />
+        android:text="Go"
+        android:onClick="loadProfile"/>
 </RelativeLayout>
