@@ -1,13 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/darker_gray">
 
-    <WebView
-        android:id="@+id/webview"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+
+    android:layout_height="match_parent"
+
+    android:background="@color/common_google_signin_btn_text_dark_pressed">
+
+
+
+
+
+    <Button
+
+        android:id="@+id/button_goback"
+
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentEnd="true"
+
+        android:layout_alignParentTop="true"
+
+        android:layout_marginEnd="23dp"
+
+        android:background="@color/colorPrimaryDark"
+
+        android:text="Click Here" />
+
+
+
+    <LinearLayout
+
         android:layout_width="match_parent"
+
         android:layout_height="match_parent"
+
+        android:layout_below="@+id/button_goback"
+
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
+
+        android:layout_marginTop="5dp"
+
+        android:orientation="vertical">
+
+
+
+        <WebView
+
+            android:id="@+id/webview"
+
+            android:layout_width="match_parent"
+
+            android:layout_height="match_parent"
+
+            android:layout_centerHorizontal="true"
+
+            android:layout_centerVertical="true" />
+
+    </LinearLayout>
+
+
+
+    <TextView
+
+        android:id="@+id/textView2"
+
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+
+        android:layout_alignBaseline="@+id/button_goback"
+
+        android:layout_alignBottom="@+id/button_goback"
+
+        android:layout_alignParentStart="true"
+
+        android:layout_marginStart="14dp"
+
+        android:text="Go Back To Your Profile"
+
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+
+        android:textSize="18sp" />
+
 </RelativeLayout>
