@@ -135,7 +135,6 @@ public class AddalarmFragment extends Fragment {
         NotificationCompat.Builder nb = mNotificationHelper.getC2Notification(title, description);
         mNotificationHelper.getManager().notify(2, nb.build());
     }
-
     /*public void selectedTimeFormat(int hour) {
         if (hour == 0) {
             hour += 12;
