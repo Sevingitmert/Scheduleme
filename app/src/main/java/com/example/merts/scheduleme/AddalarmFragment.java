@@ -98,17 +98,19 @@ public class AddalarmFragment extends Fragment {
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                cancelAlarm.setVisibility(View.VISIBLE);
+                finish.setVisibility(View.GONE);
                 pickerDate.setVisibility(View.GONE);
                 set.setVisibility(View.VISIBLE);
                 calendar.set(pickerDate.getYear(),pickerDate.getMonth(),pickerDate.getDayOfMonth(),
                         pickerTime.getCurrentHour(),pickerTime.getCurrentMinute(),0);
-               //textViewdate.setText(pickerDate.getYear() + "/" + pickerDate.getMonth() + "/" + pickerDate.getDayOfMonth());
+                //textViewdate.setText(pickerDate.getYear() + "/" + pickerDate.getMonth() + "/" + pickerDate.getDayOfMonth());
                 updateTimeText(calendar);
                 String title = editTexttitle.getText().toString();
                 final String description = editTextdescription.getText().toString();
                 String datetext = "";
                 int x=pickerDate.getMonth()+1;
-                datetext += pickerDate.getYear() + "/" + x +"/" + pickerDate.getDayOfMonth();
+                datetext +=pickerDate.getDayOfMonth()  + "/" + x +"/" +pickerDate.getYear() ;
                 String timetext = "";
                 timetext += DateFormat.getTimeInstance(DateFormat.SHORT).format(calendar.getTime());
                 Alarm alarm = new Alarm(emailString, title, description, timetext, datetext);

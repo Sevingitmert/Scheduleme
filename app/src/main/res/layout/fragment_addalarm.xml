@@ -43,6 +43,8 @@
 
 
     <DatePicker
+        android:scaleY="0.90"
+        android:scaleX="0.90"
         android:visibility="gone"
         android:id="@+id/pickerdate"
         android:layout_width="match_parent"
