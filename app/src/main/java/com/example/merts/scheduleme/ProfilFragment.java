@@ -30,6 +30,7 @@ public class ProfilFragment extends Fragment implements View.OnClickListener {
     FirebaseAuth mAuth;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference notebookRef = db.collection("Notebook");
+    private CollectionReference alarmRef=db.collection("Alarms");
 
 
     @Nullable
@@ -62,7 +63,7 @@ public class ProfilFragment extends Fragment implements View.OnClickListener {
         emailString = mAuth.getCurrentUser().getEmail();
         data += emailString;
         textViewData.setText(data);
-
+        alarmRef.whereEqualTo("email",emailString);
     }
 
     @Override
