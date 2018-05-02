@@ -84,8 +84,7 @@ public class ProfilFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.button_activity:
 
-                //fragment = new AddactivityFragment();
-                //replaceFragment(fragment);
+
                 Intent intent=new Intent(getActivity(),LocalActivity.class);
                 startActivity(intent);
                 break;

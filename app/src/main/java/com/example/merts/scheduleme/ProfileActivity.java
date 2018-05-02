@@ -82,8 +82,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                 break;
 
             case R.id.nav_localactivity:
-                // getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                //       new AddactivityFragment()).commit();
+
 
                 Intent i2 = new Intent(this, LocalActivity.class);
                 startActivity(i2);

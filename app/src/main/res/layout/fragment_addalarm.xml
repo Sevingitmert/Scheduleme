@@ -10,13 +10,15 @@
         android:id="@+id/editText_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Title" />
+        android:hint="Title"
+        android:inputType="text"/>
 
     <EditText
         android:id="@+id/editText_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Description" />
+        android:hint="Description"
+        android:inputType="text"/>
     <Button
         android:text="set a new alarm"
         android:id="@+id/set"
@@ -51,18 +53,7 @@
         android:layout_height="wrap_content">
 
     </DatePicker>
-    <!--<Button
-        android:id="@+id/time_picker"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="set time for your alarm" />
 
-    <Button
-        android:id="@+id/date_picker"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="set day for your alarm" />
-    -->
     <Button
         android:id="@+id/cancel_alarm"
         android:layout_width="match_parent"

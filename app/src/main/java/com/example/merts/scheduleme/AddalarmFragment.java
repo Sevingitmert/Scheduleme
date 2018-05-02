@@ -39,19 +39,15 @@ import java.util.Date;
 
 public class AddalarmFragment extends Fragment {
     static int requestCode = 1;
-    int hour, minute, day, month, year;
-    String format, docid;
+
+    String docid;
     Calendar calendar;
-    TextView textViewtime, textViewdate;
     FirebaseAuth mAuth;
     private String emailString;
     private EditText editTexttitle;
     private EditText editTextdescription;
-
     private Button finish;
-    private Button c2;
     private NotificationHelper mNotificationHelper;
-    private TextView mTextview;
     private TextView textViewAlarms;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference alarmsRef = db.collection("Alarms");
@@ -61,6 +57,7 @@ public class AddalarmFragment extends Fragment {
     private Button next;
     private Button set;
     private Button cancelAlarm;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -68,21 +65,13 @@ public class AddalarmFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         emailString = mAuth.getCurrentUser().getEmail();
         editTexttitle = view.findViewById(R.id.editText_title);
-        pickerDate=view.findViewById(R.id.pickerdate);
-        pickerTime=view.findViewById(R.id.pickertime);
-        next=view.findViewById(R.id.next);
-        finish=view.findViewById(R.id.finish);
+        pickerDate = view.findViewById(R.id.pickerdate);
+        pickerTime = view.findViewById(R.id.pickertime);
+        next = view.findViewById(R.id.next);
+        finish = view.findViewById(R.id.finish);
         cancelAlarm = view.findViewById(R.id.cancel_alarm);
-        next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pickerTime.setVisibility(View.GONE);
-                pickerDate.setVisibility(View.VISIBLE);
-                finish.setVisibility(View.VISIBLE);
-                next.setVisibility(View.GONE);
-            }
-        });
-        set=view.findViewById(R.id.set);
+        calendar = Calendar.getInstance();
+        set = view.findViewById(R.id.set);
         set.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -95,6 +84,16 @@ public class AddalarmFragment extends Fragment {
 
             }
         });
+
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pickerTime.setVisibility(View.GONE);
+                pickerDate.setVisibility(View.VISIBLE);
+                finish.setVisibility(View.VISIBLE);
+                next.setVisibility(View.GONE);
+            }
+        });
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -102,108 +101,31 @@ public class AddalarmFragment extends Fragment {
                 finish.setVisibility(View.GONE);
                 pickerDate.setVisibility(View.GONE);
                 set.setVisibility(View.VISIBLE);
-                calendar.set(pickerDate.getYear(),pickerDate.getMonth(),pickerDate.getDayOfMonth(),
-                        pickerTime.getCurrentHour(),pickerTime.getCurrentMinute(),0);
-                //textViewdate.setText(pickerDate.getYear() + "/" + pickerDate.getMonth() + "/" + pickerDate.getDayOfMonth());
+                calendar.set(pickerDate.getYear(), pickerDate.getMonth(), pickerDate.getDayOfMonth(),
+                        pickerTime.getCurrentHour(), pickerTime.getCurrentMinute(), 0);
+
                 updateTimeText(calendar);
                 String title = editTexttitle.getText().toString();
                 final String description = editTextdescription.getText().toString();
                 String datetext = "";
-                int x=pickerDate.getMonth()+1;
-                datetext +=pickerDate.getDayOfMonth()  + "/" + x +"/" +pickerDate.getYear() ;
+                int x = pickerDate.getMonth() + 1;
+                datetext += pickerDate.getDayOfMonth() + "/" + x + "/" + pickerDate.getYear();
                 String timetext = "";
                 timetext += DateFormat.getTimeInstance(DateFormat.SHORT).format(calendar.getTime());
                 Alarm alarm = new Alarm(emailString, title, description, timetext, datetext);
                 docid = alarm.getDocumentId();
                 alarmsRef.add(alarm);
+                Toast.makeText(getActivity().getApplicationContext(), "alarm set for "+ timetext + " "+datetext , Toast.LENGTH_LONG).show();
+
                 startAlarm(calendar);
             }
         });
         editTextdescription = view.findViewById(R.id.editText_description);
-        //mTextview = view.findViewById(R.id.text_view_alarm);
+
         textViewAlarms = view.findViewById(R.id.text_view_Alarms);
-        //c1 = view.findViewById(R.id.c1);
-        //c2 = view.findViewById(R.id.c2);
         mNotificationHelper = new NotificationHelper(getActivity());
-        //final Button timePicker = view.findViewById(R.id.time_picker);
-        //final Button datePicker = view.findViewById(R.id.date_picker);
-
-        //textViewtime = view.findViewById(R.id.text_view_time);
-        //textViewdate = view.findViewById(R.id.text_view_date);
-        calendar = Calendar.getInstance();
-        hour = calendar.get(Calendar.HOUR_OF_DAY);
-
-        minute = calendar.get(Calendar.MINUTE);
-        day = calendar.get(Calendar.DAY_OF_MONTH);
-        month = calendar.get(Calendar.MONTH);
-        year = calendar.get(Calendar.YEAR);
-        //month++;
-        //textViewdate.setText(day + "/" + month + "/" + year);
-        //selectedTimeFormat(hour);
-        //textViewtime.setText(hour + " :" + minute + " ");
 
 
-      /*  timePicker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                        // selectedTimeFormat(i);
-                        hour=i;
-                        minute=i1;
-                        calendar.set(Calendar.HOUR_OF_DAY, i);
-                        calendar.set(Calendar.MINUTE, i1);
-                        calendar.set(Calendar.SECOND, 0);
-
-                        textViewtime.setText(i + ": " + i1 + " ");
-                        // updateTimeText(calendar);
-                        emailString = mAuth.getCurrentUser().getEmail();
-                        String title = editTexttitle.getText().toString();
-                        final String description = editTextdescription.getText().toString();
-                        String timetext = "";
-                        timetext += DateFormat.getTimeInstance(DateFormat.SHORT).format(calendar.getTime());
-                        Alarm alarm = new Alarm(emailString, title, description, timetext);
-                        docid = alarm.getDocumentId();
-                        alarmsRef.add(alarm);
-                        startAlarm(calendar);
-
-                    }
-                }, hour, minute, true);
-                timePickerDialog.show();
-
-            }
-        });
-        datePicker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                        //i1++;
-
-                        calendar.set(Calendar.HOUR_OF_DAY,hour);
-                        calendar.set(Calendar.MINUTE,minute);
-                        calendar.set(Calendar.DAY_OF_MONTH, i2);
-                        calendar.set(Calendar.MONTH, i1);
-                        calendar.set(Calendar.YEAR, i);
-                        textViewdate.setText(i2 + "/" + i1 + "/" + i);
-                        updateTimeText(calendar);
-                        String title = editTexttitle.getText().toString();
-                        final String description = editTextdescription.getText().toString();
-                        String datetext = "";
-                        datetext += textViewdate.getText().toString();
-                        String timetext = "";
-                        timetext += DateFormat.getTimeInstance(DateFormat.SHORT).format(calendar.getTime());
-                        Alarm alarm = new Alarm(emailString, title, description, timetext, datetext);
-                        docid = alarm.getDocumentId();
-                        alarmsRef.add(alarm);
-                        startAlarm(calendar);
-                    }
-                }, year, month, day);
-                datePickerDialog.show();
-            }
-        });*/
         cancelAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -222,8 +144,6 @@ public class AddalarmFragment extends Fragment {
                                     Alarm alarm = documentSnapshot.toObject(Alarm.class);
                                     alarm.setDocumentId(documentSnapshot.getId());
                                     String documentId = alarm.getDocumentId();
-                                    // emailString=mAuth.getCurrentUser().getEmail();
-                                    //String title = note.getTitle();
 
 
                                     alarmsRef.document(documentId).delete();
@@ -243,37 +163,11 @@ public class AddalarmFragment extends Fragment {
         return view;
     }
 
-    /*public void sendc1(String title, String description) {
-        NotificationCompat.Builder nb = mNotificationHelper.getC1Notification();
-
-        mNotificationHelper.getManager().notify(1, nb.build());
-
-    }
-
-    public void sendc2(String title, String description) {
-        NotificationCompat.Builder nb = mNotificationHelper.getC2Notification(title, description);
-        mNotificationHelper.getManager().notify(2, nb.build());
-    }*/
-    /*public void selectedTimeFormat(int hour) {
-        if (hour == 0) {
-            hour += 12;
-            format = "AM";
-        } else if (hour == 12) {
-            format = "PM";
-        } else if (hour > 12) {
-            hour -= 12;
-            format = "PM";
-        } else {
-            format = "AM";
-        }
-    }*/
-
 
     private void updateTimeText(Calendar calendar) {
         String timetext = "Alarm set for: ";
         timetext += DateFormat.getTimeInstance(DateFormat.SHORT).format(calendar.getTime());
         Toast.makeText(getActivity().getApplicationContext(), timetext, Toast.LENGTH_SHORT).show();
-        //mTextview.setText(timetext);
     }
 
     private void startAlarm(Calendar calendar) {
@@ -318,7 +212,6 @@ public class AddalarmFragment extends Fragment {
                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                             Alarm alarm = documentSnapshot.toObject(Alarm.class);
                             alarm.setDocumentId(documentSnapshot.getId());
-                            //  String documentId = note.getDocumentId();
                             emailString = mAuth.getCurrentUser().getEmail();
                             String title = alarm.getTitle();
                             String description = alarm.getDescription();
@@ -326,7 +219,6 @@ public class AddalarmFragment extends Fragment {
                             String day = alarm.getDay();
                             data += "\nTitle: " + title + "\nDescription: " + description
                                     + "\nTime: " + time + " Day: " + day + " \n\n";
-                            //notebookRef.document(documentId)
 
                         }
                         textViewAlarms.setText(data);
