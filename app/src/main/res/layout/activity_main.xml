@@ -14,7 +14,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
-        android:src="@drawable/scheduleme_icon" />
+        android:src="@drawable/smicon" />
 
     <Button
         android:id="@+id/button_login"

@@ -33,6 +33,10 @@ public class LocalActivity extends AppCompatActivity {
 
         webView = findViewById(R.id.webview);
 
+        getSupportActionBar().setTitle("Buraları napalım ??");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
 
         //webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
 
@@ -43,7 +47,7 @@ public class LocalActivity extends AppCompatActivity {
         webView.loadUrl("http://www.biletix.com/search/TURKIYE/tr?category_sb=-1&date_sb=-1&city_sb=Eski%C5%9Fehir#!city_sb:Eski%C5%9Fehir");
 
 
-        Button button = findViewById(R.id.button_goback);
+     /*   Button button = findViewById(R.id.button_goback);
 
         button.setOnClickListener(new View.OnClickListener() {
 
@@ -57,7 +61,7 @@ public class LocalActivity extends AppCompatActivity {
 
             }
 
-        });
+        });*/
 
 
     }

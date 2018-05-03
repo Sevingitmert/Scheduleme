@@ -11,7 +11,7 @@
     <ImageView
         android:layout_width="73dp"
         android:layout_height="56dp"
-        android:src="@drawable/scheduleme_icon" />
+        android:src="@drawable/smicon" />
 
     <TextView
         android:layout_width="wrap_content"
