@@ -1,6 +1,9 @@
 package com.example.merts.scheduleme;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -88,7 +91,9 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                 startActivity(i2);
                 break;
             case R.id.nav_signout:
-
+                SharedPreferences.Editor editor=getSharedPreferences("preferences",0).edit();
+                editor.clear();
+                editor.commit();
                 mAuth.signOut();
                 finish();
                 Intent i = new Intent(this, MainActivity.class);
@@ -117,6 +122,5 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
     }
-
 
 }

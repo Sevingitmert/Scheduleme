@@ -2,6 +2,7 @@
     <string name="app_name">Scheduleme</string>
     <string name="navigation_draweer_open"> Open navigation drawer</string>
     <string name="navigation_draweer_close"> Close navigation drawer</string>
+    <string name="title_activity_maps">Map</string>
 
 
 </resources>
