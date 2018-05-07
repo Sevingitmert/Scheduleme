@@ -185,7 +185,6 @@ public class AddalarmFragment extends Fragment {
 
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
 
-
     }
 
     private void cancelAlarm() {

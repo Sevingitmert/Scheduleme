@@ -72,8 +72,10 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                         new AddalarmFragment()).commit();
                 break;
             case R.id.nav_addlocation:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new AddlocationFragment()).commit();
+                Intent intent=new Intent(this,CurrentLocationActivity.class);
+                startActivity(intent);
+                //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                 //       new AddlocationFragment()).commit();
                 break;
             case R.id.nav_takenote:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
