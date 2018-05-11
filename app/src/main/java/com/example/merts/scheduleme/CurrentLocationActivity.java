@@ -233,7 +233,7 @@ public class CurrentLocationActivity extends AppCompatActivity {
                     //fusedLocationProviderClient.requestLocationUpdates(locationRequest, pendingIntent);
                     //startService(intentt);
 
-                    
+
                     Intent locationReceiverIntent = new Intent(getApplicationContext(), LocationBroadcast.class);
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), requestcode, locationReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
