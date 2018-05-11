@@ -85,7 +85,7 @@ public class CurrentLocationActivity extends AppCompatActivity {
                         String city = addresses.get(0).getAddressLine(1);
                         //String country = addresses.get(0).getAddressLine(2);
                         t3.setText(address);
-
+                        System.out.println("");
 
                     } catch (IOException e) {
 
