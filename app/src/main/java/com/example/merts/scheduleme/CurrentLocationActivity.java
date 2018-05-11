@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.location.Address;
@@ -61,7 +62,9 @@ public class CurrentLocationActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     private String emailString;
     static int requestcode=1;
-
+    Button setdistance;
+    float selecteddistance=500;
+    NumberPicker numberPicker;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -101,6 +104,7 @@ public class CurrentLocationActivity extends AppCompatActivity {
     }
 
     private void checkPermissionOnActivityResult(int requestCode, int resultCode, Intent data) {
+
 
     }
 
@@ -166,6 +170,34 @@ public class CurrentLocationActivity extends AppCompatActivity {
         t1 = findViewById(R.id.pickedlatitude);
         t2 = findViewById(R.id.pickedlongitude);
         t3 = findViewById(R.id.address);
+        numberPicker=findViewById(R.id.numberpicker);
+        numberPicker.setMinValue(1);
+        numberPicker.setMaxValue(10000000);
+        numberPicker.setWrapSelectorWheel(true);
+        NumberPicker.Formatter formatter = new NumberPicker.Formatter() {
+            @Override
+            public String format(int value) {
+                int diff = value *10;
+                return "" + diff;
+            }
+        };
+        numberPicker.setFormatter(formatter);
+        numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker numberPicker, int i, int i1) {
+                selecteddistance=i1;
+            }
+        });
+        setdistance=findViewById(R.id.choosedistance);
+        setdistance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                numberPicker.setVisibility(View.VISIBLE);
+                setdistance.setVisibility(View.GONE);
+                getLocation.setVisibility(View.VISIBLE);
+            }
+        });
+
         stopupdates = findViewById(R.id.stopupdates);
         lat = findViewById(R.id.latitude);
         lon = findViewById(R.id.longitude);
@@ -181,7 +213,8 @@ public class CurrentLocationActivity extends AppCompatActivity {
             getLocation.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    numberPicker.setVisibility(View.GONE);
+                    setdistance.setVisibility(View.VISIBLE);
                     String locationtitle = e1.getText().toString();
                     final String locationdescription = e2.getText().toString();
                     String locationaddress = address;
@@ -200,7 +233,7 @@ public class CurrentLocationActivity extends AppCompatActivity {
                     //fusedLocationProviderClient.requestLocationUpdates(locationRequest, pendingIntent);
                     //startService(intentt);
 
-
+                    
                     Intent locationReceiverIntent = new Intent(getApplicationContext(), LocationBroadcast.class);
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), requestcode, locationReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -215,7 +248,7 @@ public class CurrentLocationActivity extends AppCompatActivity {
                             Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = settings.edit();
                     // Edit and commit
-
+                    editor.putFloat("selecteddistance",selecteddistance);
                     editor.putFloat("tlat", (float) targetlatitude);
                     editor.putFloat("tlon", (float) targetlongitude);
                     editor.putString("address", address);
