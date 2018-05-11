@@ -22,8 +22,8 @@ import java.util.List;
  */
 
 public class LocationBroadcast extends BroadcastReceiver {
-    private FusedLocationProviderClient fusedLocationProviderClient;
-    private PendingIntent pendingIntent;
+    //private FusedLocationProviderClient fusedLocationProviderClient;
+    //private PendingIntent pendingIntent;
 
     @Override
     public void onReceive(Context context, Intent ıntent) {
@@ -37,13 +37,13 @@ public class LocationBroadcast extends BroadcastReceiver {
         double tlon=settings.getFloat("tlon",0);
         targetLocation.setLatitude(tlat);
         targetLocation.setLongitude(tlon);
-
+        float selecteddistance=settings.getFloat("selecteddistance",0);
         if(locationResult!=null){
             Location location=locationResult.getLastLocation();
             if(location!=null){
             System.out.println(location.getLatitude());
             System.out.println(targetLocation.getLatitude());
-            if(location.distanceTo(targetLocation)<300){
+            if(location.distanceTo(targetLocation)<selecteddistance){
                 Uri alarmUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
                 if (alarmUri == null)
                 {

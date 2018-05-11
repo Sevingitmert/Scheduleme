@@ -41,6 +41,7 @@ public class LocationReceiver extends IntentService {
         location1.setLongitude(tlon);
 
 
+
         if (LocationResult.hasResult(ıntent)) {
 
             LocationResult locationResult = LocationResult.extractResult(ıntent);
