@@ -45,6 +45,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -65,6 +66,8 @@ public class CurrentLocationActivity extends AppCompatActivity {
     Button setdistance;
     float selecteddistance=500;
     NumberPicker numberPicker;
+    ArrayList<PendingIntent> intentArray = new ArrayList<PendingIntent>();
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -238,15 +241,15 @@ public class CurrentLocationActivity extends AppCompatActivity {
 
 
                     Intent locationReceiverIntent = new Intent(getApplicationContext(), LocationBroadcast.class);
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), requestcode, locationReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), requestcode++, locationReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    intentArray.add(pendingIntent);
 
                     fusedLocationProviderClient.requestLocationUpdates(locationRequest,pendingIntent);
                     startService(locationReceiverIntent);
                     //fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
                     //change state of button
-                    getLocation.setEnabled(!getLocation.isEnabled());
-                    stopupdates.setEnabled(!stopupdates.isEnabled());
+                    //getLocation.setEnabled(!getLocation.isEnabled());
+                    //stopupdates.setEnabled(!stopupdates.isEnabled());
                     SharedPreferences settings = getSharedPreferences("preferences",
                             Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = settings.edit();
@@ -270,16 +273,48 @@ public class CurrentLocationActivity extends AppCompatActivity {
 
                         return;
                     }
+                    String xtitle = e1.getText().toString();
+
+                    locationsRef.whereEqualTo("email", emailString).whereEqualTo("title", xtitle)
+
+                            .addSnapshotListener(CurrentLocationActivity.this, new EventListener<QuerySnapshot>() {
+                                @Override
+                                public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
+                                    if (e != null) {
+                                        return;
+                                    }
+
+                                    for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                        Alarm alarm = documentSnapshot.toObject(Alarm.class);
+                                        alarm.setDocumentId(documentSnapshot.getId());
+                                        String documentId = alarm.getDocumentId();
+
+
+                                        locationsRef.document(documentId).delete();
+
+                                    }
+
+
+                                }
+                            });
+                    Intent intent = new Intent(getApplicationContext(), LocationBroadcast.class);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), requestcode--, intent, 0);
+                    fusedLocationProviderClient.removeLocationUpdates(pendingIntent);
+
+                    Toast.makeText(getApplicationContext(), "location deleted", Toast.LENGTH_SHORT).show();
+
+
                     fusedLocationProviderClient.removeLocationUpdates(locationCallback);
                     //change state of button
-                    getLocation.setEnabled(!getLocation.isEnabled());
-                    stopupdates.setEnabled(!stopupdates.isEnabled());
+                    //getLocation.setEnabled(!getLocation.isEnabled());
+                    //stopupdates.setEnabled(!stopupdates.isEnabled());
                 }
             });
 
         }
 
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
