@@ -33,7 +33,7 @@ public class LocalActivity extends AppCompatActivity {
 
         webView = findViewById(R.id.webview);
 
-        getSupportActionBar().setTitle("Buraları napalım ??");
+        getSupportActionBar().setTitle("Local Aktiities");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 

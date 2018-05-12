@@ -17,12 +17,14 @@
         android:id="@+id/locationtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="title"/>
+        android:hint="title"
+        android:inputType="text"/>
     <EditText
         android:id="@+id/locationdescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="description"/>
+        android:hint="description"
+        android:inputType="text"/>
 
     <TextView
         android:text="address:"

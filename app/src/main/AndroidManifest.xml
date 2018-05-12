@@ -30,7 +30,8 @@
 
         <receiver android:name=".LocationBroadcast"/>
         <receiver android:name=".AlertReceiver" />
-        <activity android:name=".CurrentLocationActivity">
+        <activity android:name=".CurrentLocationActivity"
+            android:parentActivityName=".ProfileActivity">
 
         </activity>
 
@@ -46,6 +47,7 @@
             android:parentActivityName=".ProfileActivity">
 
         </activity>
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

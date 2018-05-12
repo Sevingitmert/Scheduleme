@@ -153,6 +153,9 @@ public class CurrentLocationActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         emailString = mAuth.getCurrentUser().getEmail();
         setContentView(R.layout.activity_current_location);
+
+        getSupportActionBar().setTitle("Add Location");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
         try {
             // for activty
