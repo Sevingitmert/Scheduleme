@@ -8,7 +8,7 @@ import java.util.Date;
  * Created by furkan on 1.05.2018.
  */
 
-public class Alarm {
+public class AlarmClass {
     private String email;
     private String documentId;
     private String title;
@@ -16,21 +16,16 @@ public class Alarm {
     private String time;
     private String day;
 
-    public Alarm(){
+    public AlarmClass() {
         //public no-arg constructor needed
     }
-    public Alarm(String email,String title,String description,String time){
-        this.email=email;
-        this.title=title;
-        this.description=description;
-        this.time=description;
-    }
-    public Alarm(String email,String title, String description,String time,String day){
+
+    public AlarmClass(String email, String title, String description, String time, String day) {
         this.email = email;
-        this.title=title;
-        this.description=description;
-        this.time=time;
-        this.day=day;
+        this.title = title;
+        this.description = description;
+        this.time = time;
+        this.day = day;
     }
 
     public String getDay() {

@@ -1,39 +1,22 @@
 package com.example.merts.scheduleme;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.SetOptions;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by merts on 24.04.2018.
@@ -54,7 +37,7 @@ public class TakenoteFragment extends Fragment implements View.OnClickListener {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference notebookRef = db.collection("Notebook");
-    //private DocumentReference noteRef = db.document("Notebook/My First Note");
+    //private DocumentReference noteRef = db.document("Notebook/My First NoteClass");
 
 
     @Nullable
@@ -70,8 +53,8 @@ public class TakenoteFragment extends Fragment implements View.OnClickListener {
 
         Button bsave = view.findViewById(R.id.savenote);
         bsave.setOnClickListener(this);
-        Button bload = view.findViewById(R.id.loadnote);
-        bload.setOnClickListener(this);
+        //Button bload = view.findViewById(R.id.loadnote);
+        //bload.setOnClickListener(this);
         Button bupdatedescription = view.findViewById(R.id.updatedescription);
         bupdatedescription.setOnClickListener(this);
 
@@ -97,12 +80,12 @@ public class TakenoteFragment extends Fragment implements View.OnClickListener {
                         }
                         String data = "";
                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                            Note note = documentSnapshot.toObject(Note.class);
-                            note.setDocumentId(documentSnapshot.getId());
-                          //  String documentId = note.getDocumentId();
+                            NoteClass noteClass = documentSnapshot.toObject(NoteClass.class);
+                            noteClass.setDocumentId(documentSnapshot.getId());
+                          //  String documentId = noteClass.getDocumentId();
                             emailString = mAuth.getCurrentUser().getEmail();
-                            String title = note.getTitle();
-                            String description = note.getDescription();
+                            String title = noteClass.getTitle();
+                            String description = noteClass.getDescription();
                             data += "\nTitle: " + title + "\nDescription: " + description
                                     + " \n\n";
                             //notebookRef.document(documentId)
@@ -125,41 +108,13 @@ public class TakenoteFragment extends Fragment implements View.OnClickListener {
 
                 emailString = mAuth.getCurrentUser().getEmail();
                 System.out.println(emailString);
-                Note note = new Note(emailString, title, description);
-                docid = note.getDocumentId();
-                notebookRef.add(note);
+                NoteClass noteClass = new NoteClass(emailString, title, description);
+                docid = noteClass.getDocumentId();
+                notebookRef.add(noteClass);
 
 
                 break;
-            case R.id.loadnote:
-                notebookRef.whereEqualTo("email", emailString)
 
-
-                        .get()
-                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                            @Override
-                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                String data = "";
-                                for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                    Note note = documentSnapshot.toObject(Note.class);
-                                    note.setDocumentId(documentSnapshot.getId());
-
-                                   // String documentId = note.getDocumentId();
-                                    emailString = mAuth.getCurrentUser().getEmail();
-                                    String title = note.getTitle();
-                                    String description = note.getDescription();
-                                    data += "\nTitle: " + title + "\nDescription: " + description
-                                            + " \n\n";
-
-
-                                }
-                                textViewData.setText(data);
-
-
-                            }
-                        });
-
-                break;
             case R.id.updatedescription:
                 String updatetitle = Edittexttitle.getText().toString();
                 final String updatedesc = Edittextdescription.getText().toString();
@@ -175,11 +130,11 @@ public class TakenoteFragment extends Fragment implements View.OnClickListener {
                                 }
 
                                 for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                    Note note = documentSnapshot.toObject(Note.class);
-                                    note.setDocumentId(documentSnapshot.getId());
-                                    String documentId = note.getDocumentId();
+                                    NoteClass noteClass = documentSnapshot.toObject(NoteClass.class);
+                                    noteClass.setDocumentId(documentSnapshot.getId());
+                                    String documentId = noteClass.getDocumentId();
                                     //emailString=mAuth.getCurrentUser().getEmail();
-                                   // String title = note.getTitle();
+                                   // String title = noteClass.getTitle();
 
 
                                     notebookRef.document(documentId).update("description", updatedesc);
@@ -205,11 +160,11 @@ public class TakenoteFragment extends Fragment implements View.OnClickListener {
                                 }
 
                                 for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                    Note note = documentSnapshot.toObject(Note.class);
-                                    note.setDocumentId(documentSnapshot.getId());
-                                    String documentId = note.getDocumentId();
+                                    NoteClass noteClass = documentSnapshot.toObject(NoteClass.class);
+                                    noteClass.setDocumentId(documentSnapshot.getId());
+                                    String documentId = noteClass.getDocumentId();
                                     // emailString=mAuth.getCurrentUser().getEmail();
-                                    //String title = note.getTitle();
+                                    //String title = noteClass.getTitle();
 
 
                                     notebookRef.document(documentId).delete();

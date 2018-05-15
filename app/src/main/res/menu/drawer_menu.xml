@@ -12,7 +12,7 @@
         <item
             android:id="@+id/nav_addalarm"
             android:icon="@drawable/ic_addalarm"
-            android:title="Add alarm" />
+            android:title="Add alarmClass" />
         <item
             android:id="@+id/nav_addlocation"
             android:icon="@drawable/ic_addlocation"
@@ -21,7 +21,7 @@
         <item
             android:id="@+id/nav_takenote"
             android:icon="@drawable/ic_takenote"
-            android:title="Take note" />
+            android:title="Take noteClass" />
 
         <item
             android:id="@+id/nav_localactivity"

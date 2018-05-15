@@ -1,22 +1,16 @@
 package com.example.merts.scheduleme;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import android.support.v7.widget.Toolbar;
 
@@ -53,7 +47,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
 
 
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new ProfilFragment()).commit();
+                    new ProfileFragment()).commit();
             navigationView.setCheckedItem(R.id.nav_profile);
         }
 
@@ -83,7 +77,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                 break;
             case R.id.nav_profile:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new ProfilFragment()).commit();
+                        new ProfileFragment()).commit();
                 break;
 
             case R.id.nav_localactivity:
@@ -117,12 +111,5 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
 
     }
 
-
-    public void signOut(View v) {
-        mAuth.signOut();
-        finish();
-        Intent i = new Intent(this, MainActivity.class);
-        startActivity(i);
-    }
 
 }

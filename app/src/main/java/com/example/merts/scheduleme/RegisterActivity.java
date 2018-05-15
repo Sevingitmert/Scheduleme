@@ -17,7 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    EditText editText1, editText2;
+    EditText editTextEmail, editTextPassword;
     FirebaseAuth mAuth;
 
     @Override
@@ -25,18 +25,18 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        editText1 = (EditText) findViewById(R.id.editText);
-        editText2 = (EditText) findViewById(R.id.editText2);
+        editTextEmail = (EditText) findViewById(R.id.editTextEmail);
+        editTextPassword = (EditText) findViewById(R.id.editTextPassword);
 
         mAuth = FirebaseAuth.getInstance();
     }
 
     public void createUser(View v) {
-        if (editText1.getText().toString().equals("") && editText2.getText().toString().equals("")) {
+        if (editTextEmail.getText().toString().equals("") && editTextPassword.getText().toString().equals("")) {
             Toast.makeText(getApplicationContext(), "Blank not allowed", Toast.LENGTH_SHORT).show();
         } else {
-            String email = editText1.getText().toString();
-            String password = editText2.getText().toString();
+            String email = editTextEmail.getText().toString();
+            String password = editTextPassword.getText().toString();
 
 
             mAuth.createUserWithEmailAndPassword(email, password)

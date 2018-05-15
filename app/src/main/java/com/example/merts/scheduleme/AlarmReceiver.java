@@ -16,7 +16,7 @@ import android.support.v4.app.NotificationCompat;
  * Created by furkan on 29.04.2018.
  */
 
-public class AlertReceiver extends BroadcastReceiver {
+public class AlarmReceiver extends BroadcastReceiver {
 
 
     @Override
@@ -35,10 +35,6 @@ public class AlertReceiver extends BroadcastReceiver {
         NotificationCompat.Builder nb = mNotificationHelper.getC2Notification(ıntent.getExtras().getString("title"),ıntent.getExtras().getString("description"));
         mNotificationHelper.getManager().notify(2, nb.build());
 
-
-        /*NotificationHelper notificationHelper=new NotificationHelper(context);
-        NotificationCompat.Builder nb=notificationHelper.getC1Notification();
-        notificationHelper.getManager().notify(1,nb.build());*/
 
     }
 }

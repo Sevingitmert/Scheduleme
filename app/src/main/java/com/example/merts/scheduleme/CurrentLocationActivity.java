@@ -1,9 +1,6 @@
 package com.example.merts.scheduleme;
 
-import android.*;
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -11,8 +8,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -29,13 +24,11 @@ import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
@@ -46,7 +39,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 
@@ -205,8 +197,7 @@ public class CurrentLocationActivity extends AppCompatActivity {
         });
 
         stopupdates = findViewById(R.id.stopupdates);
-        lat = findViewById(R.id.latitude);
-        lon = findViewById(R.id.longitude);
+
         getLocation = findViewById(R.id.getLocation);
         //check permissions runtime
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -240,7 +231,7 @@ public class CurrentLocationActivity extends AppCompatActivity {
                     //startService(intentt);
 
 
-                    Intent locationReceiverIntent = new Intent(getApplicationContext(), LocationBroadcast.class);
+                    Intent locationReceiverIntent = new Intent(getApplicationContext(), LocationReceiver.class);
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), requestcode++, locationReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                     intentArray.add(pendingIntent);
 
@@ -285,9 +276,9 @@ public class CurrentLocationActivity extends AppCompatActivity {
                                     }
 
                                     for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                        Alarm alarm = documentSnapshot.toObject(Alarm.class);
-                                        alarm.setDocumentId(documentSnapshot.getId());
-                                        String documentId = alarm.getDocumentId();
+                                        AlarmClass alarmClass = documentSnapshot.toObject(AlarmClass.class);
+                                        alarmClass.setDocumentId(documentSnapshot.getId());
+                                        String documentId = alarmClass.getDocumentId();
 
 
                                         locationsRef.document(documentId).delete();
@@ -297,7 +288,7 @@ public class CurrentLocationActivity extends AppCompatActivity {
 
                                 }
                             });
-                    Intent intent = new Intent(getApplicationContext(), LocationBroadcast.class);
+                    Intent intent = new Intent(getApplicationContext(), LocationReceiver.class);
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), requestcode--, intent, 0);
                     fusedLocationProviderClient.removeLocationUpdates(pendingIntent);
 
@@ -338,8 +329,8 @@ public class CurrentLocationActivity extends AppCompatActivity {
             @Override
             public void onLocationResult(LocationResult locationResult) {
                 for (Location location : locationResult.getLocations()) {
-                    lat.setText(String.valueOf(location.getLatitude()));
-                    lon.setText(String.valueOf(location.getLongitude()));
+                    //lat.setText(String.valueOf(location.getLatitude()));
+                    //lon.setText(String.valueOf(location.getLongitude()));
 
 
                     if (ActivityCompat.checkSelfPermission(CurrentLocationActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED

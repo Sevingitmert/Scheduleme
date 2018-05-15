@@ -1,15 +1,12 @@
 package com.example.merts.scheduleme;
 
 import android.app.AlarmManager;
-import android.app.DatePickerDialog;
 import android.app.PendingIntent;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +28,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by merts on 24.04.2018.
@@ -112,10 +108,10 @@ public class AddalarmFragment extends Fragment {
                 datetext += pickerDate.getDayOfMonth() + "/" + x + "/" + pickerDate.getYear();
                 String timetext = "";
                 timetext += DateFormat.getTimeInstance(DateFormat.SHORT).format(calendar.getTime());
-                Alarm alarm = new Alarm(emailString, title, description, timetext, datetext);
-                docid = alarm.getDocumentId();
-                alarmsRef.add(alarm);
-                Toast.makeText(getActivity().getApplicationContext(), "alarm set for "+ timetext + " "+datetext , Toast.LENGTH_LONG).show();
+                AlarmClass alarmClass = new AlarmClass(emailString, title, description, timetext, datetext);
+                docid = alarmClass.getDocumentId();
+                alarmsRef.add(alarmClass);
+                Toast.makeText(getActivity().getApplicationContext(), "alarmClass set for "+ timetext + " "+datetext , Toast.LENGTH_LONG).show();
 
                 startAlarm(calendar);
             }
@@ -141,9 +137,9 @@ public class AddalarmFragment extends Fragment {
                                 }
 
                                 for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                    Alarm alarm = documentSnapshot.toObject(Alarm.class);
-                                    alarm.setDocumentId(documentSnapshot.getId());
-                                    String documentId = alarm.getDocumentId();
+                                    AlarmClass alarmClass = documentSnapshot.toObject(AlarmClass.class);
+                                    alarmClass.setDocumentId(documentSnapshot.getId());
+                                    String documentId = alarmClass.getDocumentId();
 
 
                                     alarmsRef.document(documentId).delete();
@@ -165,14 +161,14 @@ public class AddalarmFragment extends Fragment {
 
 
     private void updateTimeText(Calendar calendar) {
-        String timetext = "Alarm set for: ";
+        String timetext = "AlarmClass set for: ";
         timetext += DateFormat.getTimeInstance(DateFormat.SHORT).format(calendar.getTime());
         Toast.makeText(getActivity().getApplicationContext(), timetext, Toast.LENGTH_SHORT).show();
     }
 
     private void startAlarm(Calendar calendar) {
         AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(getActivity(), AlertReceiver.class);
+        Intent intent = new Intent(getActivity(), AlarmReceiver.class);
 
         intent.putExtra("title", editTexttitle.getText().toString());
         intent.putExtra("description", editTextdescription.getText().toString());
@@ -189,7 +185,7 @@ public class AddalarmFragment extends Fragment {
 
     private void cancelAlarm() {
         AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(getActivity(), AlertReceiver.class);
+        Intent intent = new Intent(getActivity(), AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), requestCode--, intent, 0);
         alarmManager.cancel(pendingIntent);
 
@@ -209,13 +205,13 @@ public class AddalarmFragment extends Fragment {
                         }
                         String data = "";
                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                            Alarm alarm = documentSnapshot.toObject(Alarm.class);
-                            alarm.setDocumentId(documentSnapshot.getId());
+                            AlarmClass alarmClass = documentSnapshot.toObject(AlarmClass.class);
+                            alarmClass.setDocumentId(documentSnapshot.getId());
                             emailString = mAuth.getCurrentUser().getEmail();
-                            String title = alarm.getTitle();
-                            String description = alarm.getDescription();
-                            String time = alarm.getTime();
-                            String day = alarm.getDay();
+                            String title = alarmClass.getTitle();
+                            String description = alarmClass.getDescription();
+                            String time = alarmClass.getTime();
+                            String day = alarmClass.getDay();
                             data += "\nTitle: " + title + "\nDescription: " + description
                                     + "\nTime: " + time + " Day: " + day + " \n\n";
 

@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="31dp"
+        android:layout_marginTop="40dp"
         android:text="TextView" />
 
     <Button
@@ -39,9 +39,9 @@
         android:id="@+id/button_takenote"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
+        android:layout_alignStart="@+id/button_addalarm"
         android:layout_below="@+id/textView"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="18dp"
         android:background="@color/colorPrimaryDark"
         android:text="Take Note" />
 

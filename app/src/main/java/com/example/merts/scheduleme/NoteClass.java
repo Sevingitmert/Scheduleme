@@ -6,18 +6,18 @@ import com.google.firebase.firestore.Exclude;
  * Created by furkan on 26.04.2018.
  */
 
-public class Note {
+public class NoteClass {
     private String email;
     private String documentId;
     private String title;
     private String description;
 
 
-    public Note(){
+    public NoteClass(){
         //public no-arg constructor needed
     }
 
-    public Note(String email,String title, String description){
+    public NoteClass(String email, String title, String description){
         this.email = email;
         this.title=title;
         this.description=description;

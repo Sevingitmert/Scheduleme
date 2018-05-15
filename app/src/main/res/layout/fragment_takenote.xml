@@ -31,13 +31,6 @@
         android:onClick="saveNote"
         android:text="Save" />
 
-    <Button
-        android:id="@+id/loadnote"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:onClick="loadNote"
-        android:text="Load" />
 
     <Button
         android:id="@+id/updatedescription"

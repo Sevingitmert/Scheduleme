@@ -137,7 +137,7 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             // Log.w("TAG", "signInWithCredential:failure", task.getException());
-                            Toast.makeText(getApplicationContext(), "User lcould not log in", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "User could not log in", Toast.LENGTH_SHORT).show();
 
                             // Snackbar.make(findViewById(R.id.main_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
                             //updateUI(null);

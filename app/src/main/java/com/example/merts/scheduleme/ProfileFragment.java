@@ -27,7 +27,7 @@ import com.google.firebase.firestore.QuerySnapshot;
  * Created by merts on 24.04.2018.
  */
 
-public class ProfilFragment extends Fragment implements View.OnClickListener {
+public class ProfileFragment extends Fragment implements View.OnClickListener {
     private TextView textViewData;
     private String emailString;
     FirebaseAuth mAuth;
@@ -103,11 +103,6 @@ public class ProfilFragment extends Fragment implements View.OnClickListener {
 
 
         }
-    }
-
-    public void loadProfile(View view) {
-        Intent intent = new Intent(getActivity(), LocalActivity.class);
-        startActivity(intent);
     }
 
 
