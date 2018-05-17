@@ -21,19 +21,20 @@
         android:inputType="text"/>
     <Button
         android:text="set a new alarm"
-        android:id="@+id/set"
+        android:id="@+id/set_new_alarm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
     <Button
         android:visibility="gone"
         android:text="save your alarm"
-        android:id="@+id/finish"
+        android:id="@+id/save_alarm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <Button
         android:visibility="gone"
         android:text="choose a day now"
-        android:id="@+id/next"
+        android:id="@+id/nextforpickday"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <TimePicker

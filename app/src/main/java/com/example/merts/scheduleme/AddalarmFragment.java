@@ -33,7 +33,7 @@ import java.util.Calendar;
  * Created by merts on 24.04.2018.
  */
 
-public class AddalarmFragment extends Fragment {
+public class AddalarmFragment extends Fragment implements View.OnClickListener{
     static int requestCode = 1;
 
     String docid;
@@ -42,7 +42,7 @@ public class AddalarmFragment extends Fragment {
     private String emailString;
     private EditText editTexttitle;
     private EditText editTextdescription;
-    private Button finish;
+    private Button save_alarm;
     private NotificationHelper mNotificationHelper;
     private TextView textViewAlarms;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -50,9 +50,10 @@ public class AddalarmFragment extends Fragment {
     ArrayList<PendingIntent> intentArray = new ArrayList<PendingIntent>();
     private DatePicker pickerDate;
     private TimePicker pickerTime;
-    private Button next;
-    private Button set;
+    private Button nextforpickday;
+    private Button set_new_alarm;
     private Button cancelAlarm;
+
 
     @Nullable
     @Override
@@ -60,43 +61,79 @@ public class AddalarmFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_addalarm, container, false);
         mAuth = FirebaseAuth.getInstance();
         emailString = mAuth.getCurrentUser().getEmail();
-        editTexttitle = view.findViewById(R.id.editText_title);
         pickerDate = view.findViewById(R.id.pickerdate);
         pickerTime = view.findViewById(R.id.pickertime);
-        next = view.findViewById(R.id.next);
-        finish = view.findViewById(R.id.finish);
-        cancelAlarm = view.findViewById(R.id.cancel_alarm);
         calendar = Calendar.getInstance();
-        set = view.findViewById(R.id.set);
-        set.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                next.setVisibility(View.VISIBLE);
-                finish.setVisibility(View.GONE);
+        set_new_alarm = view.findViewById(R.id.set_new_alarm);
+        set_new_alarm.setOnClickListener(this);
+        nextforpickday = view.findViewById(R.id.nextforpickday);
+        nextforpickday.setOnClickListener(this);
+        save_alarm = view.findViewById(R.id.save_alarm);
+        save_alarm.setOnClickListener(this);
+        cancelAlarm = view.findViewById(R.id.cancel_alarm);
+        cancelAlarm.setOnClickListener(this);
+        editTexttitle = view.findViewById(R.id.editText_title);
+        editTextdescription = view.findViewById(R.id.editText_description);
+        textViewAlarms = view.findViewById(R.id.text_view_Alarms);
+        mNotificationHelper = new NotificationHelper(getActivity());
+
+        return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        alarmsRef.whereEqualTo("email", emailString)
+
+                .addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
+                        if (e != null) {
+                            return;
+                        }
+                        String data = "";
+                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            AlarmClass alarmClass = documentSnapshot.toObject(AlarmClass.class);
+                            alarmClass.setDocumentId(documentSnapshot.getId());
+                            emailString = mAuth.getCurrentUser().getEmail();
+                            String title = alarmClass.getTitle();
+                            String description = alarmClass.getDescription();
+                            String time = alarmClass.getTime();
+                            String day = alarmClass.getDay();
+                            data += "\nTitle: " + title + "\nDescription: " + description
+                                    + "\nTime: " + time + " Day: " + day + " \n\n";
+
+                        }
+                        textViewAlarms.setText(data);
+
+                    }
+                });
+    }
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.set_new_alarm:
+                nextforpickday.setVisibility(View.VISIBLE);
+                save_alarm.setVisibility(View.GONE);
                 cancelAlarm.setVisibility(View.GONE);
                 pickerTime.setVisibility(View.VISIBLE);
-                set.setVisibility(View.GONE);
+                set_new_alarm.setVisibility(View.GONE);
 
 
-            }
-        });
-
-        next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                break;
+            case R.id.nextforpickday:
                 pickerTime.setVisibility(View.GONE);
                 pickerDate.setVisibility(View.VISIBLE);
-                finish.setVisibility(View.VISIBLE);
-                next.setVisibility(View.GONE);
-            }
-        });
-        finish.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                save_alarm.setVisibility(View.VISIBLE);
+                nextforpickday.setVisibility(View.GONE);
+
+
+                break;
+            case R.id.save_alarm:
                 cancelAlarm.setVisibility(View.VISIBLE);
-                finish.setVisibility(View.GONE);
+                save_alarm.setVisibility(View.GONE);
                 pickerDate.setVisibility(View.GONE);
-                set.setVisibility(View.VISIBLE);
+                set_new_alarm.setVisibility(View.VISIBLE);
                 calendar.set(pickerDate.getYear(), pickerDate.getMonth(), pickerDate.getDayOfMonth(),
                         pickerTime.getCurrentHour(), pickerTime.getCurrentMinute(), 0);
 
@@ -111,20 +148,13 @@ public class AddalarmFragment extends Fragment {
                 AlarmClass alarmClass = new AlarmClass(emailString, title, description, timetext, datetext);
                 docid = alarmClass.getDocumentId();
                 alarmsRef.add(alarmClass);
-                Toast.makeText(getActivity().getApplicationContext(), "alarmClass set for "+ timetext + " "+datetext , Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), "alarm set for "+ timetext + " "+datetext , Toast.LENGTH_LONG).show();
 
                 startAlarm(calendar);
-            }
-        });
-        editTextdescription = view.findViewById(R.id.editText_description);
-
-        textViewAlarms = view.findViewById(R.id.text_view_Alarms);
-        mNotificationHelper = new NotificationHelper(getActivity());
 
 
-        cancelAlarm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                break;
+            case R.id.cancel_alarm:
                 String xtitle = editTexttitle.getText().toString();
 
                 alarmsRef.whereEqualTo("email", emailString).whereEqualTo("title", xtitle)
@@ -152,11 +182,11 @@ public class AddalarmFragment extends Fragment {
 
 
                 cancelAlarm();
-            }
-        });
 
 
-        return view;
+                break;
+        }
+
     }
 
 
@@ -192,34 +222,7 @@ public class AddalarmFragment extends Fragment {
         Toast.makeText(getActivity().getApplicationContext(), "alarm deleted", Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        alarmsRef.whereEqualTo("email", emailString)
 
-                .addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(QuerySnapshot queryDocumentSnapshots, FirebaseFirestoreException e) {
-                        if (e != null) {
-                            return;
-                        }
-                        String data = "";
-                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                            AlarmClass alarmClass = documentSnapshot.toObject(AlarmClass.class);
-                            alarmClass.setDocumentId(documentSnapshot.getId());
-                            emailString = mAuth.getCurrentUser().getEmail();
-                            String title = alarmClass.getTitle();
-                            String description = alarmClass.getDescription();
-                            String time = alarmClass.getTime();
-                            String day = alarmClass.getDay();
-                            data += "\nTitle: " + title + "\nDescription: " + description
-                                    + "\nTime: " + time + " Day: " + day + " \n\n";
 
-                        }
-                        textViewAlarms.setText(data);
-
-                    }
-                });
-    }
 
 }

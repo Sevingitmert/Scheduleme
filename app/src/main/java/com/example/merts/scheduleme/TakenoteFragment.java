@@ -23,21 +23,15 @@ import com.google.firebase.firestore.QuerySnapshot;
  */
 
 public class TakenoteFragment extends Fragment implements View.OnClickListener {
-   // private static final String TAG = "TakenoteFragment";
-    String docid;
 
-   // private static final String KEY_TITLE = "Title";
-  //  private static final String KEY_DESCRIPTION = "Description";
+    String docid;
     private String emailString;
     FirebaseAuth mAuth;
     private EditText Edittexttitle;
     private EditText Edittextdescription;
-
     private TextView textViewData;
-
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference notebookRef = db.collection("Notebook");
-    //private DocumentReference noteRef = db.document("Notebook/My First NoteClass");
 
 
     @Nullable
@@ -82,7 +76,7 @@ public class TakenoteFragment extends Fragment implements View.OnClickListener {
                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                             NoteClass noteClass = documentSnapshot.toObject(NoteClass.class);
                             noteClass.setDocumentId(documentSnapshot.getId());
-                          //  String documentId = noteClass.getDocumentId();
+                            //  String documentId = noteClass.getDocumentId();
                             emailString = mAuth.getCurrentUser().getEmail();
                             String title = noteClass.getTitle();
                             String description = noteClass.getDescription();
@@ -133,8 +127,6 @@ public class TakenoteFragment extends Fragment implements View.OnClickListener {
                                     NoteClass noteClass = documentSnapshot.toObject(NoteClass.class);
                                     noteClass.setDocumentId(documentSnapshot.getId());
                                     String documentId = noteClass.getDocumentId();
-                                    //emailString=mAuth.getCurrentUser().getEmail();
-                                   // String title = noteClass.getTitle();
 
 
                                     notebookRef.document(documentId).update("description", updatedesc);
@@ -163,8 +155,6 @@ public class TakenoteFragment extends Fragment implements View.OnClickListener {
                                     NoteClass noteClass = documentSnapshot.toObject(NoteClass.class);
                                     noteClass.setDocumentId(documentSnapshot.getId());
                                     String documentId = noteClass.getDocumentId();
-                                    // emailString=mAuth.getCurrentUser().getEmail();
-                                    //String title = noteClass.getTitle();
 
 
                                     notebookRef.document(documentId).delete();

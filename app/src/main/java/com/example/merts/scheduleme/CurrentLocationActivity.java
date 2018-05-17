@@ -54,9 +54,9 @@ public class CurrentLocationActivity extends AppCompatActivity {
     String docid;
     FirebaseAuth mAuth;
     private String emailString;
-    static int requestcode=1;
+    static int requestcode = 1;
     Button setdistance;
-    float selecteddistance=500;
+    float selecteddistance = 500;
     NumberPicker numberPicker;
     ArrayList<PendingIntent> intentArray = new ArrayList<PendingIntent>();
 
@@ -163,19 +163,19 @@ public class CurrentLocationActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         textViewLocations = findViewById(R.id.text_view_Locations);
-        e1 = findViewById(R.id.locationtitle);
-        e2 = findViewById(R.id.locationdescription);
-        t1 = findViewById(R.id.pickedlatitude);
-        t2 = findViewById(R.id.pickedlongitude);
+        e1 = findViewById(R.id.location_title);
+        e2 = findViewById(R.id.location_description);
+        t1 = findViewById(R.id.picked_latitude);
+        t2 = findViewById(R.id.picked_longitude);
         t3 = findViewById(R.id.address);
-        numberPicker=findViewById(R.id.numberpicker);
+        numberPicker = findViewById(R.id.numberpicker);
         numberPicker.setMinValue(1);
         numberPicker.setMaxValue(10000000);
         numberPicker.setWrapSelectorWheel(true);
         NumberPicker.Formatter formatter = new NumberPicker.Formatter() {
             @Override
             public String format(int value) {
-                int diff = value *10;
+                int diff = value * 10;
                 return "" + diff;
             }
         };
@@ -183,10 +183,10 @@ public class CurrentLocationActivity extends AppCompatActivity {
         numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-                selecteddistance=i1;
+                selecteddistance = i1;
             }
         });
-        setdistance=findViewById(R.id.choosedistance);
+        setdistance = findViewById(R.id.choose_distance);
         setdistance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -232,10 +232,10 @@ public class CurrentLocationActivity extends AppCompatActivity {
 
 
                     Intent locationReceiverIntent = new Intent(getApplicationContext(), LocationReceiver.class);
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), requestcode++, locationReceiverIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), requestcode++, locationReceiverIntent, 0);//PendingIntent.FLAG_UPDATE_CURRENT
                     intentArray.add(pendingIntent);
 
-                    fusedLocationProviderClient.requestLocationUpdates(locationRequest,pendingIntent);
+                    fusedLocationProviderClient.requestLocationUpdates(locationRequest, pendingIntent);
                     startService(locationReceiverIntent);
                     //fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
                     //change state of button
@@ -245,7 +245,7 @@ public class CurrentLocationActivity extends AppCompatActivity {
                             Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = settings.edit();
                     // Edit and commit
-                    editor.putFloat("selecteddistance",selecteddistance);
+                    editor.putFloat("selecteddistance", selecteddistance);
                     editor.putFloat("tlat", (float) targetlatitude);
                     editor.putFloat("tlon", (float) targetlongitude);
                     editor.putString("address", address);
